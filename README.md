@@ -19,10 +19,10 @@ That's a simple python app for communication with the ChatGPT API provided by Op
 - Instead of appropriate OpenAI python library it uses simple `requests` library so you need to wait to get the full response from ChatGPT  
 
 **TODO**
-- implement command line style
-  |--  left and right arrows to move between input symbols
-  |--  some shortcuts to move between words
-  |--  up and down arrows to get to commands history  
+- implement command line style  
+  - [ ]  left and right arrows to move between input symbols  
+  - [ ]  some shortcuts to move between words  
+  - [ ]  up and down arrows to get to commands history    
 
 
 # Installation
