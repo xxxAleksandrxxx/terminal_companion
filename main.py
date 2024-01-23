@@ -61,7 +61,6 @@ def ask_gpt(gpt_model, gpt_role, question):
 
     # prepare the text for sending as json
     question = question.replace('\n', '\\n')
-    question = question.replace('"', '\"')
     question = question.replace('«', '\\"')
     question = question.replace('»', '\\"')
     question = question.replace('„', '\\"')
