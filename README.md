@@ -27,7 +27,7 @@ That's a simple python app for communication with the ChatGPT API provided by Op
 
 # Installation
 ## Setup environment variable
-Get API key from [https://platform.openai.com/](https://platform.openai.com/) firstly
+Get API key from [https://platform.openai.com/](https://platform.openai.com/) firstly.  
 Then add API key to environment variable
 - **for Windows**  
   open CMD terminal and run  
