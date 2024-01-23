@@ -88,7 +88,7 @@ def ask_gpt(gpt_model, gpt_role, question):
         # the most common error connect to lack of internet connection
         print("\nAAAAAAA!!!!   Error!")
         print("Probably there is no internet connection. Check it and try again.")
-        print(f"If the internet connection is ok, but this message is still there, open the script:\n{sys.argv[0]}\nand uncomment part: \n```\nfor e in Exception:\n   print(e)\n```\nto read full error description")
+        print(f"If the internet connection is ok, but this message is still there, open main.py and uncomment part: \n```\nfor e in Exception:\n   print(e)\n```\nto read full error description.\nIt's in ask_gpt function, approximately lines 94 and 95")
        
         # uncomment two strings below to get full error description in response
         # for e in Exception[0]:
