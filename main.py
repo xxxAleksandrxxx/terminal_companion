@@ -379,7 +379,7 @@ def main():
 
         print(question_hat)
         gpt_input = input("│Question:│\n")
-    print("Thank you, bye!")
+    print("Thank you, bye!\n\n")
 
 
 
