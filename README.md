@@ -70,8 +70,8 @@ venv example:
 python3 -m venv .venv
 ```
 
-Activate it 
-venv example:
+Activate it   
+venv example:  
 ```zsh
 source .venv/bin/activate 
 ```
@@ -106,12 +106,14 @@ For next step it could be good idea to call help with one of any
 
 Or simply write your question straightaway.
 By default it will use gpt3 model with no role and with conversation mode turned off (like if each question would start a new dialog with ChatGPT).  
-By default it starts with:  
 ```python
 model: gpt3              # gpt-3.5-turbo-1106 (up to Jan 2024)
 role: empty              # "", no role
 conversation mode: False # conversation is off   
 ```
+
+To check current settings, press Enter with no input. It will also show settings after you change model, role, or conversation mode. After setting up new parameters, the program will use them until you set up new ones or exit from the program.  
+
 
 To exit from the app:
 - `q`
