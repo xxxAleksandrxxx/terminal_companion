@@ -133,6 +133,7 @@ def print_help(model_def, role_def, cc_def):
     '''
     printout general help text
     '''
+    print("<enter>   check current settings")
     print("h         general help")
     print("-h        general help")
     print("help      general help")
