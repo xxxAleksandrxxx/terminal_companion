@@ -417,9 +417,10 @@ def main():
                 except Exception as e:
                     stop_event.set()
                     spinner_thread.join()
+                    print("Error: Spinner exception happened!")
+                    print(e)
                     # continue
                     # break
-                    # print(e)
                 # clean the answer in case if its string and print it out else just print as it is
                 # if type(gpt_reply) == str:          
                 #     gpt_reply = gpt_reply.replace("\\n", "\n")
