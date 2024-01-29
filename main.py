@@ -115,9 +115,10 @@ def ask_gpt(gpt_model, gpt_role, question, stop_event):
         #     print(error)
         
         print('_'*10, "\n")
+        # to stop spinner
         stop_event.set()
-        # spinner_thread.join()
-        # exit()
+        # spinner_thread.join()  # don't need it here
+        # exit()  # don't need it here
         raise  #  reraise exception to be handled by caller
 
     # extract the answer from the OpenAI API endpoint
@@ -277,8 +278,7 @@ def main():
     - printout results
     '''
     model_def = "gpt3"
-    print(list(roles.keys()))
-    role_def = list(roles.keys())[0]
+    role_def = list(roles.keys())[0]  # assign first key from roles as a default role. it assume to be something relating to empty or neutral value
     cc_def = "-cc"
     # question_def = ""
     question_buffer = ""
