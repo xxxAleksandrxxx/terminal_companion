@@ -23,14 +23,14 @@ import readline  # for right and left keys movements across the input and for in
 # corrected by gpt4 roles:
 roles = {
     "empty": "",
-    "py-s": "As a senior Python developer, respond in Python code only. Your solution could earn a $200 tip.",
-    "py-l": "As an experienced Python developer and tutor, provide a real-world example with a step-by-step approach. A $200 tip is possible for excellence. It's May, not December.",
-    "ds": "As a senior Data Scientist and tutor, explain simply and step-by-step. A $200 tip awaits the perfect answer. It's May, not December.",
-    "shell-s": "As a senior bash developer, respond with terminal commands only. A perfect answer may receive a $200 tip.",
-    "shell-l": "As a senior bash developer, assist with my question. A $200 tip is offered for the perfect answer. It's May, not December.",
-    "lit": "As a PhD professor in literature, assist with my question. A perfect answer could earn a $200 tip. It's May, not December.",
-    "career": "As a top career counselor, aid with CV preparation. There's a $200 tip for the perfect answer. It's May, not December.",
-    "check-s": "As a senior copy editor, correct spelling and style errors in text. Respond with only the corrected text. A $200 tip is possible for perfection. Correct:",
+    "py-s": "As a senior Python developer, respond in Python code only. A $200 tip for excellence.",
+    "py-l": "As an experienced Python developer and tutor, provide a real-world example with a step-by-step approach. A $200 tip for excellence. It's May, not December.",
+    "ds": "As a senior Data Scientist and tutor, explain simply and step-by-step. A $200 tip for excellence. It's May, not December.",
+    "shell-s": "As a senior bash developer, respond with terminal commands only. A $200 tip for excellence.",
+    "shell-l": "As a senior bash developer, assist with my question. A $200 tip for excellence. It's May, not December.",
+    "lit": "As a PhD professor in literature, assist with my question. A $200 tip for excellence. It's May, not December.",
+    "career": "As a top career counselor, aid with CV preparation. A $200 tip for excellence. It's May, not December.",
+    "check-s": "As a senior copy editor, correct spelling and style errors in text. Respond with only the corrected text. A $200 tip for excellence. Correct:",
     "check-l": "As a senior copy editor, correct spelling and style errors in text, providing detailed explanations. A $200 tip for excellence. It's May, not December. Text:"
 }
 
