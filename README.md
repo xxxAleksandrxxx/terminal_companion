@@ -1,29 +1,32 @@
 # terminal_companion
 # Description
-That's a simple python app for communication with the ChatGPT API provided by OpenAI directly from terminal.  
+It's a simple Python app (use python 3.10.5) for communicating with the ChatGPT API, provided by OpenAI, directly from the terminal.   
 
-**Pros:**  
-- different models (gpt-3.5-turbo-0613 and gpt-4-1106-preview up to Jan 2024)
-- custom roles
-- continue conversation with seamless switching between models and roles
-- switch model, role, continue conversation mode on the fly
-- simple one-line requests
-- complex multi-line requests
-- use only requests library
-- use API key stored in your environment variables for safety
-- it has spinner to show that we are waiting for server response and the app hasn't frozen yet 😅
-- it has even help feature! 😁  
+**Pros:**
+- Switch model, role, and continue conversation mode on the fly. It means that you can start conversation with gpt3.5, then continue with gpt4 and after return back to gpt3.5 🤩
+- Different models (gpt-3.5-turbo-1106 and gpt-4-0125-preview up to January 2024).
+- Custom roles.
+- Continue conversation with seamless switching between models and roles.
+- Simple one-line requests.
+- Complex multi-line requests.
+- Uses as few third-party libraries as possible (third-party: requests; built-in into python 3.10.5:, os, threading, time, re and readline)
+- Use API key stored in your environment variables for safety.
+- It features a spinner to indicate that we are waiting for a server response and that the app hasn't frozen yet.
+- Displays number of total tokens used so you can estimate the price or amount of tokens left in the conversation mode.
+- It even has a help feature! 😁
 
-**Cons:**
+**Cons**
 - All the logic, models and roles are stored in main.py file. Less mess in the folder and more mess inside the file (up to Jan 2024)
-- Instead of appropriate OpenAI python library it uses simple `requests` library so you need to wait to get the full response from ChatGPT  
+- Instead of appropriate OpenAI python library it uses simple `requests` library
+- The are plenty of useless comments in the code (up to Jan 2024) 😅
 
 **TODO**
 - implement command line style  
-  - [ ]  left and right arrows to move between input symbols  
-  - [ ]  some shortcuts to move between words  
-  - [ ]  up and down arrows to get to commands history    
-
+  - [X]  left and right arrows to move between input symbols  
+  - [X]  some shortcuts to move between words  
+  - [X]  up and down arrows to get to commands history 
+  - [ ]  double-check that "role": "system" with "content": gpt_role for handling the roles is still valid way - up to Jan 2024 I feel like it doesn't work 
+  - [ ]  return the whole request that was just sent by pressing up arrow. I'm not sure that I really need it... 🤔   
 
 # Installation
 ## Setup environment variable
@@ -61,7 +64,7 @@ cd terminal_companion
 ```
 
   ## Virtual environment
-Use any way to create virtual environment like venv, conda, poetry
+Move to the app folder and use any way to create virtual environment like venv, conda, poetry
 venv example:
 ```zsh
 python3 -m venv .venv
@@ -79,9 +82,20 @@ pip install -r requirements.txt
 ```
 
 # Usage
-Run the main.py file
+Run the main.py file (the environment has to be activated)
 ```zsh
 python3 main.py
+```
+
+Or use bash function 
+For zsh terminal on Linux/macOS (assume terminal_companion is in Desktop) add the following to ~/.zshrc:
+```zsh
+# Terminal companion
+gpt() {
+    source /Users/$(whoami)/Desktop/terminal_companion/.venv/bin/activate
+    python /Users/$(whoami)/Desktop/terminal_companion/main.py
+    deactivate
+} 
 ```
 
 For next step it could be good idea to call help with one of any  
@@ -90,7 +104,14 @@ For next step it could be good idea to call help with one of any
 - `help`
 - `-help`
 
-Or simply write your question straightaway.  
+Or simply write your question straightaway.
+By default it will use gpt3 model with no role and with conversation mode turned off (like if each question would start a new dialog with ChatGPT).  
+By default it starts with:  
+```python
+model: gpt3              # gpt-3.5-turbo-1106 (up to Jan 2024)
+role: empty              # "", no role
+conversation mode: False # conversation is off   
+```
 
 To exit from the app:
 - `q`
@@ -101,21 +122,17 @@ To exit from the app:
 - `-exit`
 - `exit` 
 
-
-By default it starts with:  
-```python
-model: gpt3              # gpt-3.5-turbo-0613 (up to Jan 2024)
-role: empty              # "", no role
-conversation mode: False # conversation is off   
-```
  
 The full request could look like this for a question that has only one line:
 ```zsh
 <model> <role> <continuous conversation mode> <question with one line>
 ```
-or, if it has many lines, wrap your question with `:::` symbols
+or, if it has many lines, wrap your question with `:::` symbols:
 ```zsh
-<model> <role> <continuous conversation mode> :::<question with many lines>:::
+<model> <role> <continuous conversation mode> :::<question 
+with
+many 
+lines>:::
 ```
 
 It's also possible to ask straightaway:
@@ -126,8 +143,8 @@ help me to write my first python code. it should be something really interesting
 
 ## Models (valid up to Jan 2024):
 ```python
-"gpt3": "gpt-3.5-turbo-0613",
-"gpt4": "gpt-4-1106-preview"
+"gpt3": "gpt-3.5-turbo-1106",
+"gpt4": "gpt-4-0125-preview"
 ```
 
 ## Roles (valid up to Jan 2024):
