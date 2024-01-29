@@ -3,6 +3,7 @@ import requests  # use for sending POST request
 import threading  # use for displaying spinner during waiting for response from server
 import time  # use for making some pause in spinner animation
 import re
+import readline  # for right and left keys movements across the input and for input history feature 
 
 # setup dict with roles
 # # original roles:
@@ -35,8 +36,10 @@ roles = {
 
 # setup dict with models
 models = {
-    "gpt3": "gpt-3.5-turbo-0613",
-    "gpt4": "gpt-4-1106-preview"
+    # "gpt3": "gpt-3.5-turbo-0613",
+    "gpt3": "gpt-3.5-turbo-1106",
+    # "gpt4": "gpt-4-1106-preview",
+    "gpt4": "gpt-4-0125-preview"
 }
 
 continue_conversation = {
@@ -49,12 +52,14 @@ api_key = os.environ["OPENAI_API_KEY"]
 
 
 
-def ask_gpt(gpt_model, gpt_role, question):
+def ask_gpt(gpt_model, gpt_role, question, stop_event):
     '''
     prepare text for sending to chatgpt
     send POST request to openAI end-point
     return the answer
     check for errors
+
+    stop_event - to stop spinner thread
     '''
     # setup model temperature
     gpt_temp = 0.8
@@ -97,20 +102,24 @@ def ask_gpt(gpt_model, gpt_role, question):
     # send POST request to OpenAI API endpoint 
     try:
         response = requests.post(url, json=data, headers=headers)
-    except Exception:
+    except Exception as e:
         # in case of errors printout calm message
         # the most common error connect to lack of internet connection
-        print("\nAAAAAAA!!!!   Error!")
-        print("Probably there is no internet connection. Check it and try again.")
-        print(f"If the internet connection is ok, but this message is still there, open main.py and uncomment part: \n```\nfor e in Exception:\n   print(e)\n```\nto read full error description.\nIt's in ask_gpt function, approximately lines 94 and 95")
-       
+        # raise Exception()
+        print("\nAAAAAAA!!!!   Error!\n", e, "\n")
+        print("Most likely that there is no internet connection. Check it firstly")
+        # print(f"If the internet connection is ok, but this message is still there, open main.py and uncomment part: \n```\nfor e in Exception:\n   print(e)\n```\nto read full error description.\nIt's in ask_gpt function, approximately lines 114 and 115")
+        
         # uncomment two strings below to get full error description in response
-        # for e in Exception[0]:
-        #     print(e)
+        # for error in e[0]:
+        #     print(error)
         
         print('_'*10, "\n")
-        exit()
-    
+        stop_event.set()
+        # spinner_thread.join()
+        # exit()
+        raise  #  reraise exception to be handled by caller
+
     # extract the answer from the OpenAI API endpoint
     if response.status_code == 200:
         data = response.json()
@@ -216,9 +225,11 @@ def proceed_input(text_in, model_def, role_def, cc_def):
         print_help(model_def, role_def, cc_def)
         return "Help"
 
-    # check first three positions for having model, role or cc values
+    # check first three positions if there is model, role or cc value
     arguments = text_in.split()
-    for i, arg in enumerate(arguments[:3]):
+    i = 0
+    # for i, arg in enumerate(arguments[:3]):
+    for arg in arguments[:3]:
         if arg in models:
             model_extracted = arg
         elif arg in roles:
@@ -227,7 +238,8 @@ def proceed_input(text_in, model_def, role_def, cc_def):
             cont_conv_extracted = arg
         else:
             break
-    # if somewhere inside there is on 
+        i += 1
+    # if there were less then 3 arguments we extract the question after the last one or if all 3 exist we extract the text after all them as question 
     if i < 3:
         question_extracted = arguments[i:]
     else:
@@ -271,10 +283,14 @@ def main():
     gpt_reply = "---blank gpt answer---"
     n = 0
     tokens_used_total = 0
-    question_hat = "\n\n┌─────────┐"
+    # question_hat = "\n\n┌─────────┐"
+    # print(question_hat)
+    question_hat = "\n\n┌─────────┐\n│Question:│"
+ 
+    # gpt_input = input("│Question:│\n")
+    # print("│Question:│")
     print(question_hat)
-    gpt_input = input("│Question:│\n")
-
+    gpt_input = input()
 
     # infinite loop of requests to gpt
     while gpt_input not in ["q", "-q", "-quit", "quit", "-exit", "exit"]:
@@ -294,7 +310,8 @@ def main():
         if t == "Error" or t == "Help":
             # all errors printout inside proceed_input() so we only need to ask for another input
             print(question_hat)
-            gpt_input = input("│Question:│\n")
+            # gpt_input = input("│Question:│\n")
+            gpt_input = input()
             continue
         else:
             model, role, cc, question = t
@@ -324,11 +341,16 @@ def main():
 
             # if there is no question, then probably user asked for help or changed default role, model, continuous conversation mode
             if not question:
-                # so ask for next input
-                print("No question\nTry again")
+                # ask for next input
+                # print("No question\nTry again")
+
+                # print current settings
+                print("Current settings:")
+                print(f"{model} {role} {cc}")
 
                 print(question_hat)
-                gpt_input = input("│Question:│\n")
+                # gpt_input = input("│Question:│\n")
+                gpt_input = input()
                 continue
             # if there is some text in question_def, then send request to OpenAI API
             else:
@@ -347,38 +369,75 @@ def main():
                 print(f"│{model_full}:│")
                 # print("\nYour question:\n", question, sep="")
 
-                # start spinner
+                # # start spinner
+                # stop_event = threading.Event()
+                # spinner_thread = threading.Thread(target=display_spinner, args=(stop_event, number_of_spaces))
+                # spinner_thread.start()
+
+                # # send question to ChatGPT and get answer with number of used tokens
+                # gpt_reply, tokens_used = ask_gpt(models[model], role, question)
+                # tokens_used_total += int(tokens_used)
+                # # gpt_reply = gpt_reply.replace("\\n", "\n")
+                # # print(gpt_reply, end="\n\n")
+                
+                # # stop spinner after receiving answer from ChatGPT 
+                # stop_event.set()
+                # spinner_thread.join()
+
+
+                # Handle the error during request
                 stop_event = threading.Event()
                 spinner_thread = threading.Thread(target=display_spinner, args=(stop_event, number_of_spaces))
-                spinner_thread.start()
-
-                # send question to ChatGPT and get answer with number of used tokens
-                gpt_reply, tokens_used = ask_gpt(models[model], role, question)
-                tokens_used_total += int(tokens_used)
-                # gpt_reply = gpt_reply.replace("\\n", "\n")
-                # print(gpt_reply, end="\n\n")
-                
-                # stop spinner after after receiving answer from ChatGPT 
-                stop_event.set()
-                spinner_thread.join()
-
-                # clean the answer in case if its string and print it out else just print as it is
-                if type(gpt_reply) == str:          
-                    gpt_reply = gpt_reply.replace("\\n", "\n")
-                    gpt_reply = re.sub(r"answer \d{1,5}:\n?", "", gpt_reply)
-                    print(" " * (number_of_spaces + 2), end="\r")  # to delete the shadow of spinner if the answer is too short and don't fully replace the last printed spinner graphics
-                    print("tokens used:", tokens_used_total)  # display number of used tokens - we get it from API response
-                    print(gpt_reply, end="\n\n")
-                else:
-                    print(gpt_reply)
+                try:
+                # start spinner
+                    spinner_thread.start()
+                    # send question to ChatGPT and get answer with number of used tokens
+                    gpt_reply, tokens_used = ask_gpt(models[model], role, question, stop_event)
+                    tokens_used_total += int(tokens_used)
+                    # gpt_reply = gpt_reply.replace("\\n", "\n")
+                    # print(gpt_reply, end="\n\n")
+                    # stop spinner after receiving answer from ChatGPT 
+                    stop_event.set()
+                    spinner_thread.join()
+                    if type(gpt_reply) == str:          
+                        gpt_reply = gpt_reply.replace("\\n", "\n")
+                        gpt_reply = re.sub(r"answer \d{1,5}:\n?", "", gpt_reply)
+                        print(" " * (number_of_spaces + 2), end="\r")  # to delete the shadow of spinner if the answer is too short and don't fully replace the last printed spinner graphics
+                        print("tokens used:", tokens_used_total)  # display number of used tokens - we get it from API response
+                        print(gpt_reply, end="\n\n")
+                    else:
+                        print(gpt_reply)
 
                 # probably it's not the best solution to check cc twice but I'm lazy to build another solution
-                if cc == "+cc":
-                    question_buffer += f"answer {n}:\n" + gpt_reply + "\n"
-                    tokens_used_total += tokens_used
+                    if cc == "+cc":
+                        question_buffer += f"answer {n}:\n" + gpt_reply + "\n"
+                        tokens_used_total += tokens_used
+                except Exception as e:
+                    stop_event.set()
+                    spinner_thread.join()
+                    # continue
+                    # break
+                    # print(e)
+                # clean the answer in case if its string and print it out else just print as it is
+                # if type(gpt_reply) == str:          
+                #     gpt_reply = gpt_reply.replace("\\n", "\n")
+                #     gpt_reply = re.sub(r"answer \d{1,5}:\n?", "", gpt_reply)
+                #     print(" " * (number_of_spaces + 2), end="\r")  # to delete the shadow of spinner if the answer is too short and don't fully replace the last printed spinner graphics
+                #     print("tokens used:", tokens_used_total)  # display number of used tokens - we get it from API response
+                #     print(gpt_reply, end="\n\n")
+                # else:
+                #     print(gpt_reply)
 
+                # # probably it's not the best solution to check cc twice but I'm lazy to build another solution
+                # if cc == "+cc":
+                #     question_buffer += f"answer {n}:\n" + gpt_reply + "\n"
+                #     tokens_used_total += tokens_used
+
+        # print(question_hat)
+        # gpt_input = input("│Question:│\n")
+        # print("│Question:│")
         print(question_hat)
-        gpt_input = input("│Question:│\n")
+        gpt_input = input()
     print("Thank you, bye!\n\n")
 
 
