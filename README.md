@@ -20,14 +20,6 @@ It's a simple Python app (use python 3.10.5) for communicating with the ChatGPT 
 - Instead of appropriate OpenAI python library it uses simple `requests` library
 - The are plenty of useless comments in the code (up to Jan 2024) 😅
 
-**TODO**
-- implement command line style  
-  - [X]  left and right arrows to move between input symbols  
-  - [X]  some shortcuts to move between words  
-  - [X]  up and down arrows to get to commands history 
-  - [X]  double-check that "role": "system" with "content"
-  - [ ]  return the whole request that was just sent by pressing up arrow. I'm not sure that I really need it... 🤔   
-
 # Installation
 ## Setup environment variable
 Get API key from [https://platform.openai.com/](https://platform.openai.com/) firstly.  
@@ -228,3 +220,17 @@ or ask a new question with conversation mode turned off explicitly:
 ```zsh
 -cc who are you?
 ```
+
+
+**TODO**
+- implement command line style  
+  - [X]  left and right arrows to move between input symbols  
+  - [X]  some shortcuts to move between words  
+  - [X]  up and down arrows to get to commands history 
+  - [X]  double-check that "role": "system" with "content"
+  - [ ]  move models to separate file
+  - [ ]  move roles to separate file
+  - [ ]  clean the code from useless comments
+  - [ ]  replace question = question.replace('\n', '\\n') with json.dump(). Probably no need as it works well even now 😁
+  - [ ]  rewrite conversations according to [OpenAI recommendation](https://platform.openai.com/docs/guides/text-generation/chat-completions-api)... I'm not sure that I really need it... 🤔  
+  - [ ]  return the whole request that was just sent by pressing up arrow. I'm not sure that I really need it... 🤔   
