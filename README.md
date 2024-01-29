@@ -25,7 +25,7 @@ It's a simple Python app (use python 3.10.5) for communicating with the ChatGPT 
   - [X]  left and right arrows to move between input symbols  
   - [X]  some shortcuts to move between words  
   - [X]  up and down arrows to get to commands history 
-  - [ ]  double-check that "role": "system" with "content": gpt_role for handling the roles is still valid way - up to Jan 2024 I feel like it doesn't work 
+  - [X]  double-check that "role": "system" with "content"
   - [ ]  return the whole request that was just sent by pressing up arrow. I'm not sure that I really need it... 🤔   
 
 # Installation
