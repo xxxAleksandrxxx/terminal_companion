@@ -228,8 +228,8 @@ or ask a new question with conversation mode turned off explicitly:
   - [X]  some shortcuts to move between words  
   - [X]  up and down arrows to get to commands history 
   - [X]  double-check that "role": "system" with "content"
-  - [ ]  move models to separate file
-  - [ ]  move roles to separate file
+  - [X]  move models to separate file
+  - [X]  move roles to separate file
   - [ ]  clean the code from useless comments
   - [ ]  replace question = question.replace('\n', '\\n') with json.dump(). Probably no need as it works well even now 😁
   - [ ]  rewrite conversations according to [OpenAI recommendation](https://platform.openai.com/docs/guides/text-generation/chat-completions-api)... I'm not sure that I really need it... 🤔  
