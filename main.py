@@ -8,50 +8,18 @@ from MODELS import models  # import models from MODELS.py file
 from ROLES import roles  # import roles from ROLES.py file
 
 
-# setup dict with roles
-# # original roles:
-# roles = {
-#     "empty": "",
-#     "py-s": "Act as a senior python developer. Reply only with python code. Do not write explanations. I am going to tip $200 for perfect answer!",
-#     "py-l": "Act as a senior python developer with huge experience as a tutor. Add real a world example. Think step by step. I am going to tip $200 for perfect answer! Today is MAY, not DECEMBER",
-#     "ds": "Act as a senior Data Scientist with huge experience as a tutor. Explain in a simple way. Think step by step. I am going to tip $200 for perfect answer! Today is MAY, not DECEMBER",
-#     "shell-s": "Act as a senior bash developer. Reply only with terminal command. Do not write explanations. I am going to tip $200 for perfect answer!",
-#     "shell-l": "Act as a senior bash developer. Help me with question. I am going to tip $200 for perfect answer! Today is MAY, not DECEMBER",
-#     "lit": "Act as phd professor in literature. Help with question. I am going to tip $200 for perfect answer! Today is MAY, not DECEMBER",
-#     "career": "Act as top career counselor. Help with CV preparation. I am going to tip $200 for perfect answer! Today is MAY, not DECEMBER",
-#     "check-s": "Act as senior copy editor. Check provided text for spelling and style mistakes and correct them. Answer only with corrected text. Do not write explanations. I am going to tip $200 for perfect answer! Correct the text:",
-#     "check-l": "Act as senior copy editor. Check provided text for spelling and style mistakes and correct them.  Provide detailed explanations. I am going to tip $200 for perfect answer! Today is MAY, not DECEMBER. Text for correction:"
-# }
 
-# corrected by gpt4 roles:
-# roles = {
-#     "empty": "",
-#     "py-s": "As a senior Python developer, respond in Python code only. A $200 tip for excellence. You will be charged $2000 for any answer except code!",
-#     "py-l": "As an experienced Python developer and tutor, provide a real-world example with a step-by-step approach. A $200 tip for excellence. It's May, not December.",
-#     "ds": "As a senior Data Scientist and tutor, explain simply and step-by-step. A $200 tip for excellence. It's May, not December.",
-#     "shell-s": "As a senior bash developer, respond with terminal commands only. A $200 tip for excellence. You will be charged $2000 for any answer except code!",
-#     "shell-l": "As a senior bash developer, assist with my question. A $200 tip for excellence. It's May, not December.",
-#     "lit": "As a PhD professor in literature, assist with my question. A $200 tip for excellence. It's May, not December.",
-#     "career": "As a top career counselor, aid with CV preparation. A $200 tip for excellence. It's May, not December.",
-#     "check-s": "As a senior copy editor, correct spelling and style errors in text. Respond with only the corrected text. A $200 tip for excellence. You will be charged $2000 for any answer except corrected text!",
-#     "check-l": "As a senior copy editor, correct spelling and style errors in text, providing detailed explanations. A $200 tip for excellence. It's May, not December. Text:"
-# }
-
-# setup dict with models
-# models = {
-#     # "gpt3": "gpt-3.5-turbo-0613",
-#     "gpt3": "gpt-3.5-turbo-1106",
-#     # "gpt4": "gpt-4-1106-preview",
-#     "gpt4": "gpt-4-0125-preview"
-# }
-
+# possible values for continue conversation
 continue_conversation = {
-    "+cc": True,
-    "-cc": False
+    "+cc": True,  # continue conversation mode on
+    "-cc": False  # continue conversation mode off
 }
 
  # import API key from environment variables
 api_key = os.environ["OPENAI_API_KEY"]
+
+# setup temperature for ChatGPT; link for reference: https://platform.openai.com/docs/guides/text-generation/faq
+gpt_temp = 0.8  # using as global parameter probably not the best idea but let it be so for a while
 
 
 
@@ -64,8 +32,6 @@ def ask_gpt(gpt_model, gpt_role, question, stop_event):
 
     stop_event - to stop spinner thread
     '''
-    # setup model temperature
-    gpt_temp = 0.8
 
     # prepare the text for sending as json
     question = question.replace('\n', '\\n')
@@ -108,20 +74,12 @@ def ask_gpt(gpt_model, gpt_role, question, stop_event):
     except Exception as e:
         # in case of errors printout calm message
         # the most common error connect to lack of internet connection
-        # raise Exception()
-        print("\nAAAAAAA!!!!   Error!\n", e, "\n")
+        print("\nAAAAAAA!!!!   Error!")
+        # print("\nAAAAAAA!!!!   Error!\n", e, "\n")
         print("Most likely that there is no internet connection. Check it firstly")
-        # print(f"If the internet connection is ok, but this message is still there, open main.py and uncomment part: \n```\nfor e in Exception:\n   print(e)\n```\nto read full error description.\nIt's in ask_gpt function, approximately lines 114 and 115")
-        
-        # uncomment two strings below to get full error description in response
-        # for error in e[0]:
-        #     print(error)
-        
         print('_'*10, "\n")
-        # to stop spinner
-        stop_event.set()
-        # spinner_thread.join()  # don't need it here
-        # exit()  # don't need it here
+        
+        stop_event.set()  # for spinner handling
         raise  #  reraise exception to be handled by caller
 
     # extract the answer from the OpenAI API endpoint
@@ -161,6 +119,7 @@ def print_help(model_def, role_def, cc_def):
     print()
     print("usage:")
     print("<question with one line>")
+    print(":::<question\nwith\nmany\nlines>:::")
     print("<model> <role> <continuous conversation mode> <question with one line>")
     print("<model> <role> <continuous conversation mode> :::<question with many lines>:::")
     print()
@@ -205,7 +164,7 @@ def proceed_input(text_in, model_def, role_def, cc_def):
     '''
     terminator = ":::"
     arguments = ""
-    text = ""
+    # text = ""  # probably not used 
     
     model_extracted = ""
     role_extracted = ""
@@ -233,7 +192,8 @@ def proceed_input(text_in, model_def, role_def, cc_def):
     # check first three positions if there is model, role or cc value
     arguments = text_in.split()
     i = 0
-    # for i, arg in enumerate(arguments[:3]):
+
+    # looking if there is model, role or conversation mode in the input; they have to be first three words in this case
     for arg in arguments[:3]:
         if arg in models:
             model_extracted = arg
@@ -244,7 +204,7 @@ def proceed_input(text_in, model_def, role_def, cc_def):
         else:
             break
         i += 1
-    # if there were less then 3 arguments we extract the question after the last one or if all 3 exist we extract the text after all them as question 
+    # if there were less then 3 words we extract the question after the last one or if all 3 exist we extract the text after all them as question 
     if i < 3:
         question_extracted = arguments[i:]
     else:
@@ -283,33 +243,23 @@ def main():
     model_def = "gpt3"
     role_def = list(roles.keys())[0]  # assign first key from roles as a default role. it assume to be something relating to empty or neutral value
     cc_def = "-cc"
-    # question_def = ""
     question_buffer = ""
     gpt_reply = "---blank gpt answer---"
     n = 0
     tokens_used_total = 0
-    # question_hat = "\n\n┌─────────┐"
-    # print(question_hat)
-    question_hat = "\n\n┌─────────┐\n│Question:│"
- 
-    # gpt_input = input("│Question:│\n")
-    # print("│Question:│")
+    
+    question_hat = "\n\n┌─────────┐\n│Question:│"  # setup how we mark user input
     print(question_hat)
-    gpt_input = input()
+    gpt_input = input()  # initial input
 
     # infinite loop of requests to gpt
     while gpt_input not in ["q", "-q", "-quit", "quit", "-exit", "exit"]:
 
-        # multiline input; check if ::: is in first input.
+        # check if ::: is in first input for activating multiline input
         if ":::" in gpt_input and not gpt_input.endswith(":::"):
             gpt_input += "\n" + input_multiline()
-        
-        # # debugging output
-        # print("question_hat")
-        # print("│Question:│\n", gpt_input, sep="")
 
-
-        # extract arguments and question form input 
+        # extract arguments (model, role, conversation mode) and question form provided input 
         t = proceed_input(gpt_input, model_def, role_def, cc_def)
 
         if t == "Error" or t == "Help":
@@ -319,6 +269,7 @@ def main():
             gpt_input = input()
             continue
         else:
+            # if all is ok, proceed_input return model, role, cc and question
             model, role, cc, question = t
             
             # if any parameter changed, replace default value with new one
@@ -346,15 +297,11 @@ def main():
 
             # if there is no question, then probably user asked for help or changed default role, model, continuous conversation mode
             if not question:
-                # ask for next input
-                # print("No question\nTry again")
-
                 # print current settings
                 print("Current settings:")
                 print(f"{model} {role} {cc}")
-
+                # ask for next input
                 print(question_hat)
-                # gpt_input = input("│Question:│\n")
                 gpt_input = input()
                 continue
             # if there is some text in question_def, then send request to OpenAI API
@@ -372,35 +319,18 @@ def main():
                 number_of_spaces = len(model_full) + 1
                 print("\n\n┌", "─" * number_of_spaces, "┐", sep='')
                 print(f"│{model_full}:│")
-                # print("\nYour question:\n", question, sep="")
 
-                # # start spinner
-                # stop_event = threading.Event()
-                # spinner_thread = threading.Thread(target=display_spinner, args=(stop_event, number_of_spaces))
-                # spinner_thread.start()
-
-                # # send question to ChatGPT and get answer with number of used tokens
-                # gpt_reply, tokens_used = ask_gpt(models[model], role, question)
-                # tokens_used_total += int(tokens_used)
-                # # gpt_reply = gpt_reply.replace("\\n", "\n")
-                # # print(gpt_reply, end="\n\n")
-                
-                # # stop spinner after receiving answer from ChatGPT 
-                # stop_event.set()
-                # spinner_thread.join()
-
-
-                # Handle the error during request
+                # For handling possible errors during request to the server
                 stop_event = threading.Event()
                 spinner_thread = threading.Thread(target=display_spinner, args=(stop_event, number_of_spaces))
                 try:
                 # start spinner
                     spinner_thread.start()
+                    
                     # send question to ChatGPT and get answer with number of used tokens
-                    gpt_reply, tokens_used = ask_gpt(models[model], role, question, stop_event)
-                    tokens_used_total += int(tokens_used)
-                    # gpt_reply = gpt_reply.replace("\\n", "\n")
-                    # print(gpt_reply, end="\n\n")
+                    gpt_reply, tokens_used = ask_gpt(models[model], role, question, stop_event)  # extract ChatGPT reply and number of total tokens used by OpenAI to send and answer the question 
+                    tokens_used_total += int(tokens_used)  # summarize tokens in case of conversation mode on 
+
                     # stop spinner after receiving answer from ChatGPT 
                     stop_event.set()
                     spinner_thread.join()
@@ -408,7 +338,7 @@ def main():
                         gpt_reply = gpt_reply.replace("\\n", "\n")
                         gpt_reply = re.sub(r"answer \d{1,5}:\n?", "", gpt_reply)
                         print(" " * (number_of_spaces + 2), end="\r")  # to delete the shadow of spinner if the answer is too short and don't fully replace the last printed spinner graphics
-                        print("tokens used:", tokens_used_total)  # display number of used tokens - we get it from API response
+                        print("tokens used:", tokens_used_total)  # display number of used tokens, extracted from API response and summarized in case of conversation mode on
                         print(gpt_reply, end="\n\n")
                     else:
                         print(gpt_reply)
@@ -418,30 +348,12 @@ def main():
                         question_buffer += f"answer {n}:\n" + gpt_reply + "\n"
                         tokens_used_total += tokens_used
                 except Exception as e:
+                    # if some error happened during spinner rotation, stop spinner and printout the error
                     stop_event.set()
                     spinner_thread.join()
                     print("Error: Spinner exception happened!")
                     print(e)
-                    # continue
-                    # break
-                # clean the answer in case if its string and print it out else just print as it is
-                # if type(gpt_reply) == str:          
-                #     gpt_reply = gpt_reply.replace("\\n", "\n")
-                #     gpt_reply = re.sub(r"answer \d{1,5}:\n?", "", gpt_reply)
-                #     print(" " * (number_of_spaces + 2), end="\r")  # to delete the shadow of spinner if the answer is too short and don't fully replace the last printed spinner graphics
-                #     print("tokens used:", tokens_used_total)  # display number of used tokens - we get it from API response
-                #     print(gpt_reply, end="\n\n")
-                # else:
-                #     print(gpt_reply)
-
-                # # probably it's not the best solution to check cc twice but I'm lazy to build another solution
-                # if cc == "+cc":
-                #     question_buffer += f"answer {n}:\n" + gpt_reply + "\n"
-                #     tokens_used_total += tokens_used
-
-        # print(question_hat)
-        # gpt_input = input("│Question:│\n")
-        # print("│Question:│")
+                   
         print(question_hat)
         gpt_input = input()
     print("Thank you, bye!\n\n")
