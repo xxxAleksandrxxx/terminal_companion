@@ -4,6 +4,9 @@ import threading  # use for displaying spinner during waiting for response from 
 import time  # use for making some pause in spinner animation
 import re
 import readline  # for right and left keys movements across the input and for input history feature 
+from MODELS import models  # import models from MODELS.py file
+from ROLES import roles  # import roles from ROLES.py file
+
 
 # setup dict with roles
 # # original roles:
@@ -21,26 +24,26 @@ import readline  # for right and left keys movements across the input and for in
 # }
 
 # corrected by gpt4 roles:
-roles = {
-    "empty": "",
-    "py-s": "As a senior Python developer, respond in Python code only. A $200 tip for excellence. You will be charged $2000 for any answer except code!",
-    "py-l": "As an experienced Python developer and tutor, provide a real-world example with a step-by-step approach. A $200 tip for excellence. It's May, not December.",
-    "ds": "As a senior Data Scientist and tutor, explain simply and step-by-step. A $200 tip for excellence. It's May, not December.",
-    "shell-s": "As a senior bash developer, respond with terminal commands only. A $200 tip for excellence. You will be charged $2000 for any answer except code!",
-    "shell-l": "As a senior bash developer, assist with my question. A $200 tip for excellence. It's May, not December.",
-    "lit": "As a PhD professor in literature, assist with my question. A $200 tip for excellence. It's May, not December.",
-    "career": "As a top career counselor, aid with CV preparation. A $200 tip for excellence. It's May, not December.",
-    "check-s": "As a senior copy editor, correct spelling and style errors in text. Respond with only the corrected text. A $200 tip for excellence. You will be charged $2000 for any answer except corrected text!",
-    "check-l": "As a senior copy editor, correct spelling and style errors in text, providing detailed explanations. A $200 tip for excellence. It's May, not December. Text:"
-}
+# roles = {
+#     "empty": "",
+#     "py-s": "As a senior Python developer, respond in Python code only. A $200 tip for excellence. You will be charged $2000 for any answer except code!",
+#     "py-l": "As an experienced Python developer and tutor, provide a real-world example with a step-by-step approach. A $200 tip for excellence. It's May, not December.",
+#     "ds": "As a senior Data Scientist and tutor, explain simply and step-by-step. A $200 tip for excellence. It's May, not December.",
+#     "shell-s": "As a senior bash developer, respond with terminal commands only. A $200 tip for excellence. You will be charged $2000 for any answer except code!",
+#     "shell-l": "As a senior bash developer, assist with my question. A $200 tip for excellence. It's May, not December.",
+#     "lit": "As a PhD professor in literature, assist with my question. A $200 tip for excellence. It's May, not December.",
+#     "career": "As a top career counselor, aid with CV preparation. A $200 tip for excellence. It's May, not December.",
+#     "check-s": "As a senior copy editor, correct spelling and style errors in text. Respond with only the corrected text. A $200 tip for excellence. You will be charged $2000 for any answer except corrected text!",
+#     "check-l": "As a senior copy editor, correct spelling and style errors in text, providing detailed explanations. A $200 tip for excellence. It's May, not December. Text:"
+# }
 
 # setup dict with models
-models = {
-    # "gpt3": "gpt-3.5-turbo-0613",
-    "gpt3": "gpt-3.5-turbo-1106",
-    # "gpt4": "gpt-4-1106-preview",
-    "gpt4": "gpt-4-0125-preview"
-}
+# models = {
+#     # "gpt3": "gpt-3.5-turbo-0613",
+#     "gpt3": "gpt-3.5-turbo-1106",
+#     # "gpt4": "gpt-4-1106-preview",
+#     "gpt4": "gpt-4-0125-preview"
+# }
 
 continue_conversation = {
     "+cc": True,
