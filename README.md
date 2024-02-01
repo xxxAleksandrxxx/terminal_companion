@@ -20,6 +20,9 @@ It's a simple Python app (use python 3.10.5) for communicating with the ChatGPT 
 - Instead of appropriate OpenAI python library it uses simple `requests` library
 - The are plenty of useless comments in the code (up to Jan 2024) 😅
 
+# Demo
+![[https://youtu.be/R_6hTWht2Qo]]
+
 # Installation
 ## Setup environment variable
 Get API key from [https://platform.openai.com/](https://platform.openai.com/) firstly.  
