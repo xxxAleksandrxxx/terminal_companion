@@ -21,7 +21,7 @@ It's a simple Python app (use python 3.10.5) for communicating with the ChatGPT 
 - The are plenty of useless comments in the code (up to Jan 2024) 😅
 
 # Demo
-![[https://youtu.be/R_6hTWht2Qo]]
+[![Terminal Companion DEMO](https://img.youtube.com/vi/R_6hTWht2Qo/0.jpg)](https://youtu.be/R_6hTWht2Qo)
 
 # Installation
 ## Setup environment variable
