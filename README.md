@@ -18,7 +18,7 @@ It's a simple Python app (use python 3.10.5) for communicating with the ChatGPT 
 **Cons**
 - Instead of appropriate OpenAI python library it uses simple `requests` library
 
-# Demo
+# YouTube Demo
 [![Terminal Companion DEMO](https://img.youtube.com/vi/R_6hTWht2Qo/0.jpg)](https://youtu.be/R_6hTWht2Qo)
 
 # Installation
