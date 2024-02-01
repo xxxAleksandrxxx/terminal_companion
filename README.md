@@ -16,9 +16,7 @@ It's a simple Python app (use python 3.10.5) for communicating with the ChatGPT 
 - It even has a help feature! 😁
 
 **Cons**
-- All the logic, models and roles are stored in main.py file. Less mess in the folder and more mess inside the file (up to Jan 2024)
 - Instead of appropriate OpenAI python library it uses simple `requests` library
-- The are plenty of useless comments in the code (up to Jan 2024) 😅
 
 # Demo
 [![Terminal Companion DEMO](https://img.youtube.com/vi/R_6hTWht2Qo/0.jpg)](https://youtu.be/R_6hTWht2Qo)
