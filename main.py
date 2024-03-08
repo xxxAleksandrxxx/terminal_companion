@@ -188,6 +188,10 @@ def proceed_input(text_in, model_def, role_def, cc_def):
     elif text_in == "-h" or text_in == "h" or text_in == "help":
         print_help(model_def, role_def, cc_def)
         return "Help"
+    # print current status on ?
+    elif text_in == "?":
+        print(f"{model_def} {role_def} {cc_def}")
+        return "Help"
 
     # check first three positions if there is model, role or cc value
     arguments = text_in.split()
