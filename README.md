@@ -105,7 +105,10 @@ role: empty              # "", no role
 conversation mode: False # conversation is off   
 ```
 
-To check current settings, press Enter with no input. It will also show settings after you change model, role, or conversation mode. After setting up new parameters, the program will use them until you set up new ones or exit from the program.  
+To check current settings
+- press enter with empty input
+- `?`
+It will also show settings after you change model, role, or conversation mode. After setting up new parameters, the program will use them until you set up new ones or exit from the program.  
 
 
 To exit from the app:
